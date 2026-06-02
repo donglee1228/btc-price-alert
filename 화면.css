@@ -1,0 +1,169 @@
+/* 비트코인 가격알림 — 다크 테마 / 폰 세로화면 우선 레이아웃 */
+
+/* 색 토큰: 부드러운 다크(완전 흑색 X, 백지 X) */
+:root {
+  --배경: #0e1117;        /* 부드러운 다크 네이비 */
+  --배경2: #161b22;       /* 카드/패널 톤 */
+  --글자: #e6edf3;        /* 기본 글자 */
+  --글자흐림: #8b949e;    /* 보조 글자 */
+  --강조: #f7931a;        /* 비트코인 오렌지 */
+  --초록: #2ea043;        /* 연결 OK */
+  --노랑: #d29922;        /* 재연결 중 */
+  --빨강: #f85149;        /* 끊김 */
+  --테두리: #21262d;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--배경);
+  color: var(--글자);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+               "Malgun Gothic", "맑은 고딕", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 앱 셸: 세로 한 화면, 안전영역(노치) 대응 */
+.앱 {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* 은은한 라디얼 그라데이션으로 단조로운 다크를 부드럽게 */
+  background:
+    radial-gradient(1200px 600px at 50% -10%, rgba(247,147,26,0.10), transparent 60%),
+    var(--배경);
+  padding: max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
+}
+
+/* 상단 헤더 */
+.상단 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0 4px;
+}
+
+.로고 {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: var(--강조);
+  color: #1a1a1a;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.제목 {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  flex: 1 1 auto;
+}
+
+/* 연결상태 점: data-상태 속성으로 색 전환 */
+.상태점 {
+  font-size: 14px;
+  line-height: 1;
+  color: var(--글자흐림);
+  transition: color 0.3s ease;
+}
+.상태점[data-상태="연결"]  { color: var(--초록); text-shadow: 0 0 8px rgba(46,160,67,0.7); }
+.상태점[data-상태="재연결"] { color: var(--노랑); text-shadow: 0 0 8px rgba(210,153,34,0.7);
+                              animation: 깜빡 1s infinite; }
+.상태점[data-상태="끊김"]  { color: var(--빨강); text-shadow: 0 0 8px rgba(248,81,73,0.7); }
+
+@keyframes 깜빡 { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* 가운데 가격 영역: 남는 공간 다 차지하고 세로 중앙 정렬 */
+.가격영역 {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.라벨 {
+  font-size: 13px;
+  color: var(--글자흐림);
+  letter-spacing: 0.5px;
+}
+
+/* 큰 현재가 */
+.현재가 {
+  font-size: clamp(40px, 14vw, 64px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums; /* 숫자 폭 고정으로 흔들림 방지 */
+  line-height: 1.1;
+  margin: 2px 0 18px;
+  /* 값 갱신 시 부드러운 색 전환(앱.js가 .오름/.내림 클래스 토글) */
+  transition: color 0.25s ease;
+}
+.현재가.오름 { color: var(--초록); }
+.현재가.내림 { color: var(--빨강); }
+
+.다음경계라벨 {
+  font-size: 12px;
+  color: var(--글자흐림);
+  letter-spacing: 0.5px;
+}
+
+/* 다음 $300 경계 카드 */
+.다음경계 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--강조);
+  font-variant-numeric: tabular-nums;
+  background: var(--배경2);
+  border: 1px solid var(--테두리);
+  border-radius: 14px;
+  padding: 10px 18px;
+  margin-top: 4px;
+}
+
+/* 하단 영역 */
+.하단 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+/* 알림 켜기 버튼 */
+.알림버튼 {
+  width: 100%;
+  max-width: 420px;
+  padding: 16px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a1a;
+  background: var(--강조);
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.2s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.알림버튼:active { transform: scale(0.98); }
+.알림버튼:disabled { opacity: 0.55; cursor: default; }
+/* 권한 허용됨 상태(앱.js가 .켜짐 토글) */
+.알림버튼.켜짐 {
+  background: var(--배경2);
+  color: var(--초록);
+  border: 1px solid var(--초록);
+}
+
+.안내 {
+  font-size: 12px;
+  color: var(--글자흐림);
+  text-align: center;
+}
