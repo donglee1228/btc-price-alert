@@ -5,7 +5,7 @@
   <!-- 폰 세로화면 우선: 뷰포트 고정, 확대 방지 -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
   <meta name="theme-color" content="#0e1117" />
-  <title>비트코인 가격알림</title>
+  <title>코인 가격알림</title>
   <!-- PWA manifest 연결 -->
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/png" sizes="192x192" href="아이콘/아이콘-192.png" />
@@ -18,24 +18,37 @@
   <main class="앱">
     <header class="상단">
       <span class="로고">₿</span>
-      <h1 class="제목">비트코인 가격알림</h1>
+      <h1 class="제목">코인 가격알림</h1>
       <!-- 연결상태 점: 색으로 연결/재연결/끊김 표시 -->
       <span id="연결상태" class="상태점" data-상태="대기" title="연결 상태">●</span>
     </header>
 
-    <section class="가격영역">
-      <p class="라벨">현재가 (BTC/USDT)</p>
-      <!-- 큰 현재가 -->
-      <div id="현재가" class="현재가">—</div>
-      <!-- 다음 알림 경계 표시 (ON 누른 기준점 ±$300) -->
-      <p id="다음경계라벨" class="다음경계라벨">다음 알림 경계</p>
-      <div id="다음경계" class="다음경계">ON을 누르면 시작</div>
+    <section class="코인목록">
+      <!-- 비트코인: $500 단위 알림 대상 -->
+      <article class="코인카드 주코인">
+        <div class="코인머리">
+          <span class="코인명">비트코인</span>
+          <span class="코인뱃지 알림뱃지">$500 알림</span>
+        </div>
+        <div id="현재가-비트코인" class="현재가">—</div>
+        <p class="다음경계라벨">다음 알림 경계</p>
+        <div id="다음경계-비트코인" class="다음경계">ON을 누르면 시작</div>
+      </article>
+
+      <!-- 이더리움: 표시 전용(알림 없음) -->
+      <article class="코인카드 보조코인">
+        <div class="코인머리">
+          <span class="코인명">이더리움</span>
+          <span class="코인뱃지 참고뱃지">표시 전용 · 알림 없음</span>
+        </div>
+        <div id="현재가-이더리움" class="현재가 보조현재가">—</div>
+      </article>
     </section>
 
     <footer class="하단">
-      <!-- 알림 ON/OFF 토글 버튼 -->
-      <button id="알림권한버튼" class="알림버튼" type="button">▶ 알림 ON</button>
-      <p id="안내" class="안내">ON을 누른 순간 가격에서 $300 움직이면 알려드려요</p>
+      <!-- 알림 ON/OFF 토글 버튼 (비트코인 대상) -->
+      <button id="알림권한버튼" class="알림버튼" type="button">▶ 비트코인 알림 ON</button>
+      <p id="안내" class="안내">ON을 누른 순간 비트코인 가격에서 $500 움직이면 알려드려요</p>
     </footer>
   </main>
 
