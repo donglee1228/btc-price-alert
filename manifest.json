@@ -1,0 +1,26 @@
+{
+  "name": "비트코인 가격알림",
+  "short_name": "BTC알림",
+  "description": "실시간 비트코인 가격을 보고 $300 단위로 움직일 때마다 알림을 받는 앱",
+  "lang": "ko",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e1117",
+  "theme_color": "#0e1117",
+  "icons": [
+    {
+      "src": "아이콘/아이콘-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "아이콘/아이콘-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
