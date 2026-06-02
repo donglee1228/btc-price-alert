@@ -2,7 +2,8 @@
 // 핵심: 정적 앱셸은 캐시(오프라인 설치), 가격 API 요청은 캐시 우회(항상 최신).
 // 의존성 0.
 
-var 캐시이름 = '비트코인-가격알림-v1';
+// 캐시 버전: 앱 코드 바뀔 때마다 숫자를 올리면 옛 캐시가 자동 폐기된다.
+var 캐시이름 = '코인-가격알림-v3';
 
 // 앱셸: 오프라인에서도 떠야 하는 정적 자원
 var 앱셸 = [
@@ -59,36 +60,30 @@ function 가격API요청인가(요청) {
   }
 }
 
-// fetch: 앱셸은 cache-first, 가격 API/외부는 network passthrough
+// fetch: 동일출처 앱셸은 network-first(온라인이면 항상 최신, 받아오면 캐시 갱신),
+//        오프라인일 때만 캐시로 폴백. 가격 API/외부는 손대지 않고 통과.
+// → 새로 배포하면 앱을 다시 열기만 해도 최신이 뜬다(옛 화면 박제 방지).
 self.addEventListener('fetch', function (e) {
   var 요청 = e.request;
 
-  // GET만 다룬다(POST 등은 그대로 통과)
   if (요청.method !== 'GET') return;
 
-  // WebSocket 업그레이드나 가격 API는 캐시 손대지 않음
   if (가격API요청인가(요청)) {
     return; // 기본 네트워크 동작에 맡김 (캐시 우회)
   }
 
-  // 앱셸: 캐시 우선, 없으면 네트워크(받아오면 캐시 갱신)
   e.respondWith(
-    caches.match(요청).then(function (캐시응답) {
-      if (캐시응답) return 캐시응답;
-      return fetch(요청).then(function (응답) {
-        // 정상 동일출처 응답만 캐시에 보관
-        if (응답 && 응답.status === 200 && 응답.type === 'basic') {
-          var 복제 = 응답.clone();
-          caches.open(캐시이름).then(function (캐시) {
-            캐시.put(요청, 복제);
-          });
-        }
-        return 응답;
-      }).catch(function () {
-        // 오프라인이고 캐시도 없으면 index.html 폴백(네비게이션 한정)
-        if (요청.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
+    fetch(요청).then(function (응답) {
+      // 정상 동일출처 응답이면 캐시 갱신해두고 그대로 반환
+      if (응답 && 응답.status === 200 && 응답.type === 'basic') {
+        var 복제 = 응답.clone();
+        caches.open(캐시이름).then(function (캐시) { 캐시.put(요청, 복제); });
+      }
+      return 응답;
+    }).catch(function () {
+      // 오프라인 → 캐시 폴백, 네비게이션은 index.html로
+      return caches.match(요청).then(function (캐시응답) {
+        return 캐시응답 || (요청.mode === 'navigate' ? caches.match('./index.html') : undefined);
       });
     })
   );
